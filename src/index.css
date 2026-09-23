@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   BASE
+   ========================================================= */
+html,
+body {
+  background: #000;
+  color: #fff;
+  font-family: "Barlow", sans-serif;
+  overscroll-behavior-y: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* =========================================================
+   LIQUID GLASS
+   ---------------------------------------------------------
+   Two variants. Both use a near-invisible fill + a blur +
+   a gradient-stroke border drawn with a masked ::before, so
+   the "glass" edge only shows where it should (never a flat
+   box outline). Put these on any panel that sits over the
+   Aurora background or a video.
+   ========================================================= */
+.liquid-glass,
+.liquid-glass-strong {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.liquid-glass-strong {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  box-shadow:
+    4px 4px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.liquid-glass::before,
+.liquid-glass-strong::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.liquid-glass::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+}
+
+.liquid-glass-strong::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.2) 80%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+}
+
+@supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  .liquid-glass,
+  .liquid-glass-strong {
+    background: rgba(10, 10, 10, 0.86);
+  }
+}
+
+/* =========================================================
+   GLASS — LIGHT VARIANT
+   ---------------------------------------------------------
+   Same "frosted panel" idea as liquid-glass, tuned for the
+   white / pale-blue sections below the hero: a soft white
+   card with a faint blue-tinted edge, instead of a near-
+   invisible fill over a dark background.
+   ========================================================= */
+.glass-light,
+.glass-light-strong {
+  position: relative;
+  isolation: isolate;
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(33, 150, 243, 0.14);
+  box-shadow:
+    0 4px 24px rgba(13, 71, 161, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.glass-light-strong {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(33, 150, 243, 0.16);
+  box-shadow:
+    0 10px 34px rgba(13, 71, 161, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+@supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  .glass-light,
+  .glass-light-strong {
+    background: rgba(255, 255, 255, 0.96);
+  }
+}
+
+/* =========================================================
+   BLUE GLOW
+   ---------------------------------------------------------
+   Ambient, slow-drifting blue blobs used behind the white
+   sections (Trip / Destinations / About / Booking / Contact)
+   so there's still something moving as you scroll, instead
+   of a flat white field. Reuses the aurora keyframes above.
+   ========================================================= */
+.blue-glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blue-glow__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.blue-glow__orb--a {
+  width: 46vw;
+  height: 46vw;
+  left: -12vw;
+  top: -14vw;
+  background: radial-gradient(circle, rgba(144, 202, 249, 0.55) 0%, rgba(144, 202, 249, 0) 70%);
+  animation: auroraA 30s ease-in-out infinite;
+}
+
+.blue-glow__orb--b {
+  width: 38vw;
+  height: 38vw;
+  right: -10vw;
+  bottom: -10vw;
+  background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, rgba(33, 150, 243, 0) 70%);
+  animation: auroraB 36s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blue-glow__orb {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   AURORA (video stand-in)
+   ---------------------------------------------------------
+   FadingVideo renders this whenever it has no src — no trip
+   footage exists yet, and there's nothing to hotlink from
+   someone else's CDN. Slow-drifting forest-green / clay /
+   sand blur, keeps the cinematic feel until real clips land
+   in src/assets/video/. See README for how to swap it in.
+   ========================================================= */
+.aurora-fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #050705;
+}
+
+.aurora-fallback__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.75;
+  will-change: transform;
+}
+
+.aurora-fallback__orb--a {
+  width: 60vw;
+  height: 60vw;
+  left: -10vw;
+  top: -15vw;
+  background: radial-gradient(circle, rgba(72, 133, 92, 0.55) 0%, rgba(72, 133, 92, 0) 70%);
+  animation: auroraA 26s ease-in-out infinite;
+}
+
+.aurora-fallback__orb--b {
+  width: 50vw;
+  height: 50vw;
+  right: -10vw;
+  bottom: -10vw;
+  background: radial-gradient(circle, rgba(180, 82, 44, 0.4) 0%, rgba(180, 82, 44, 0) 70%);
+  animation: auroraB 32s ease-in-out infinite;
+}
+
+.aurora-fallback__orb--c {
+  width: 40vw;
+  height: 40vw;
+  left: 30vw;
+  top: 30vh;
+  background: radial-gradient(circle, rgba(243, 240, 231, 0.12) 0%, rgba(243, 240, 231, 0) 70%);
+  animation: auroraC 22s ease-in-out infinite;
+}
+
+@keyframes auroraA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6vw, 8vh) scale(1.15); }
+}
+
+@keyframes auroraB {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-7vw, -6vh) scale(1.1); }
+}
+
+@keyframes auroraC {
+  0%, 100% { transform: translate(-4vw, 2vh) scale(1); }
+  50% { transform: translate(5vw, -4vh) scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-fallback__orb {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   MISC
+   ========================================================= */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
